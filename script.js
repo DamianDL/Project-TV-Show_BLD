@@ -1,12 +1,45 @@
 //You can edit ALL of the code here
 function setup() {
   const allEpisodes = getAllEpisodes();
+
+  // update the count in the html header
+  const countDdisplay = document.getElementById("episode-count");
+  countDdisplay.innerText = `Got ${allEpisodes.length} episode(s)`;
+
   makePageForEpisodes(allEpisodes);
 }
 
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
-  rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+  const template = document.getElementById("episode-template");
+
+  rootElem.innerHTML = ""; // clear the container
+
+  episodeList.forEach((episode) => {
+    // clone the template structure
+    const clone = template.content.cloneNode(true);
+
+    // select the specific parts of the clone to update
+    const title = clone.querySelector(".episode-title");
+    const img = clone.querySelector("img");
+    const summary = clone.querySelector(".episode-summary");
+
+    // populate with data
+    const episodeCode = formatEpisodeCode(episode.season, episode.number);
+    img.src = episode.image.medium;
+    img.alt = episode.name;
+    summary.innerHTML = episode.summary;
+
+    // add the finished clone to the page
+    rootElem.appendChild(clone);
+  });
+}
+
+// creating and formatting episode code.
+function formatEpisodeCode(season, number) {
+  const s = string(season).padStart(2, "0");
+  const e = string(number).padstart(2, "0");
+  return `S${s}E${e}`;
 }
 
 window.onload = setup;
