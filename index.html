@@ -9,12 +9,30 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <h1>Welcome to the TV show episodes</h1>
+    <header id="header">
+      <h3 id="episode-count">loading episodes...</h2>
+    </header>
+
+    <main id ="root"></main>
+
+    <template id="episode-template">
+      <section class="episode-card">
+        <div class="episode-title"></div>
+        <img src="" alt="episode-image" />
+        <div class="episode-summary"></div>
+      </section>
+    </template>
+    <div class="footer">
+      <footer>
+        <h2>data sourced from <a href="https://tvmaze.com/">tvmaze.com</a></h2>
+      </footer>
+    </div>
 
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
 
-    <!-- Loads YOUR javascript code -->
+    <!-- Loads my javascript code -->
     <script src="script.js"></script>
   </body>
 </html>
