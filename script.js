@@ -3,8 +3,8 @@ function setup() {
   const allEpisodes = getAllEpisodes();
 
   // update the count in the html header
-  const countDdisplay = document.getElementById("episode-count");
-  countDdisplay.innerText = `Got ${allEpisodes.length} episode(s)`;
+  const countDisplay = document.getElementById("episode-count");
+  countDisplay.innerText = `Got ${allEpisodes.length} episode(s)`;
 
   makePageForEpisodes(allEpisodes);
 }
@@ -26,6 +26,7 @@ function makePageForEpisodes(episodeList) {
 
     // populate with data
     const episodeCode = formatEpisodeCode(episode.season, episode.number);
+    title.textContent = `${episode.name} - ${episodeCode}`;
     img.src = episode.image.medium;
     img.alt = episode.name;
     summary.innerHTML = episode.summary;
@@ -37,8 +38,8 @@ function makePageForEpisodes(episodeList) {
 
 // creating and formatting episode code.
 function formatEpisodeCode(season, number) {
-  const s = string(season).padStart(2, "0");
-  const e = string(number).padstart(2, "0");
+  const s = String(season).padStart(2, "0");
+  const e = String(number).padstart(2, "0");
   return `S${s}E${e}`;
 }
 
