@@ -39,7 +39,7 @@ function makePageForEpisodes(episodeList) {
 // creating and formatting episode code.
 function formatEpisodeCode(season, number) {
   const s = String(season).padStart(2, "0");
-  const e = String(number).padstart(2, "0");
+  const e = String(number).padStart(2, "0");
   return `S${s}E${e}`;
 }
 
