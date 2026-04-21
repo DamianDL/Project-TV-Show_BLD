@@ -1,19 +1,52 @@
 //You can edit ALL of the code here
+const state = {
+  allEpisodes: [],
+  filteredEpisodes: [],
+  searchTerm: "",
+};
+
 function setup() {
   const allEpisodes = getAllEpisodes();
+  state.allEpisodes = allEpisodes;
+  state.filteredEpisodes = allEpisodes;
 
-  // update the count in the html header
-  const countDisplay = document.getElementById("episode-count");
-  countDisplay.innerText = `Got ${allEpisodes.length} episode(s)`;
+  const searchInput = document.getElementById("search-input");
+  searchInput.addEventListener("input", (event) => {
+    state.searchTerm = event.target.value;
+    state.filteredEpisodes = filterEpisodes(state.searchTerm);
 
-  makePageForEpisodes(allEpisodes);
+    makePageForEpisodes(state.filteredEpisodes);
+  });
+
+  makePageForEpisodes(state.filteredEpisodes);
+}
+
+function filterEpisodes(searchTerm) {
+  const normalizedTerm = searchTerm.trim().toLowerCase();
+
+  if (normalizedTerm === "") {
+    return state.allEpisodes;
+  }
+
+  return state.allEpisodes.filter((episode) => {
+    const episodeName = episode.name.toLowerCase();
+    const episodeSummary = (episode.summary || "").toLowerCase();
+
+    return (
+      episodeName.includes(normalizedTerm) ||
+      episodeSummary.includes(normalizedTerm)
+    );
+  });
 }
 
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
   const template = document.getElementById("episode-template");
+  const countDisplay = document.getElementById("episode-count");
 
   rootElem.innerHTML = ""; // clear the container
+
+  countDisplay.innerText = `Displaying ${episodeList.length}/${state.allEpisodes.length} episode(s)`;
 
   episodeList.forEach((episode) => {
     // clone the template structure
