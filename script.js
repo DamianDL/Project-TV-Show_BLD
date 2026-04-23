@@ -1,4 +1,3 @@
-//You can edit ALL of the code here
 const state = {
   allShows: [],
   selectedShowId: null,
@@ -8,7 +7,6 @@ const state = {
   selectedEpisodeId: "",
   urlCache: new Map(),
 };
-
 async function setup() {
   const searchInput = document.getElementById("search-input");
   const episodeSelect = document.getElementById("episode-select");
