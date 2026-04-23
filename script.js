@@ -1,45 +1,71 @@
-//You can edit ALL of the code here
 const state = {
   allEpisodes: [],
   filteredEpisodes: [],
   searchTerm: "",
   selectedEpisode: null,
 };
+//Change to async function
+async function setup() {
+  const rootElem = document.getElementById("root");
+  const countDisplay = document.getElementById("episode-count");
 
-function setup() {
-  const allEpisodes = getAllEpisodes();
-  state.allEpisodes = allEpisodes;
-  state.filteredEpisodes = allEpisodes;
+  // Show "Loading" state
+  rootElem.innerHTML =
+    "<h2 class='loading-text'>Fetching episodes from TVMaze... Please wait.</h2>";
 
-  const searchInput = document.getElementById("search-input");
-  searchInput.value = "";
-  searchInput.addEventListener("input", (event) => {
-    state.searchTerm = event.target.value;
-    state.filteredEpisodes = filterEpisodes(state.searchTerm);
+  try {
+    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
 
-    makePageForEpisodes(state.filteredEpisodes);
-  });
-
-  const episodeSelect = document.getElementById("episode-select");
-  episodeSelect.value = "";
-  populateEpisodeSelect(episodeSelect);
-  episodeSelect.addEventListener("change", (event) => {
-    const selectedValue = event.target.value;
-    if (selectedValue === "") {
-      state.selectedEpisode = null;
-      state.filteredEpisodes = state.allEpisodes;
-    } else {
-      state.selectedEpisode = state.allEpisodes.find(
-        (ep) => `${ep.id}` === selectedValue,
-      );
-      state.filteredEpisodes = state.selectedEpisode
-        ? [state.selectedEpisode]
-        : [];
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    makePageForEpisodes(state.filteredEpisodes);
-  });
 
-  makePageForEpisodes(state.filteredEpisodes);
+    const data = await response.json();
+
+    state.allEpisodes = data;
+    state.filteredEpisodes = data;
+
+    const searchInput = document.getElementById("search-input");
+    searchInput.value = "";
+    searchInput.addEventListener("input", (event) => {
+      state.searchTerm = event.target.value;
+      state.filteredEpisodes = filterEpisodes(state.searchTerm);
+
+      makePageForEpisodes(state.filteredEpisodes);
+    });
+
+    const episodeSelect = document.getElementById("episode-select");
+    episodeSelect.value = "";
+    populateEpisodeSelect(episodeSelect);
+    episodeSelect.addEventListener("change", (event) => {
+      const selectedValue = event.target.value;
+      if (selectedValue === "") {
+        state.selectedEpisode = null;
+        state.filteredEpisodes = state.allEpisodes;
+      } else {
+        state.selectedEpisode = state.allEpisodes.find(
+          (ep) => `${ep.id}` === selectedValue,
+        );
+        state.filteredEpisodes = state.selectedEpisode
+          ? [state.selectedEpisode]
+          : [];
+      }
+      makePageForEpisodes(state.filteredEpisodes);
+    });
+
+    makePageForEpisodes(state.filteredEpisodes);
+  } catch (error) {
+    // Handle errors gracefully
+    console.error("Failed to fetch episodes:", error);
+    rootElem.innerHTML = `
+      <div class="error-message">
+        <h2>Oops! Something went wrong.</h2>
+        <p>Could not load episodes. Please check your internet connection and try again.</p>
+        <p><small>${error.message}</small></p>
+      </div>
+    `;
+    countDisplay.innerText = "Error loading data.";
+  }
 }
 
 function filterEpisodes(searchTerm) {
